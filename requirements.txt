@@ -1,0 +1,11 @@
+# Web Interface & Interactive Dashboard
+streamlit>=1.35.0
+
+# HTTP Client for xAI Grok API
+requests>=2.28.0
+
+# Environment Configuration & Secret Management
+python-dotenv>=1.0.0
+
+# Code Syntax Highlighting for Diff Views
+pygments>=2.17.0

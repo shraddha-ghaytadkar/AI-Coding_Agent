@@ -1,0 +1,37 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment and Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+
+# Cloned External Repositories
+cloned_repos/
+temp_repos/
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Antigravity and IDE files
+.system_generated/
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
