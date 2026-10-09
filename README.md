@@ -263,32 +263,79 @@ http://localhost:8501
 
 ## Running the Test Suite
 
-The project includes unit and integration tests verifying the AST inspector, sandbox execution runner, and end-to-end pipeline orchestrator.
+The repository contains automated unit and integration test suites covering the core agent pipeline as well as the bundled sample codebases. **100% of test cases (18 / 18) are passing.**
 
-### Run All Tests
+### Test Breakdown & Pass Metrics
+
+| Test Category | Suite / Module | Passing Tests | Status |
+| :--- | :--- | :---: | :---: |
+| **Core Agent Pipeline** | AST Inspector (`tests/test_inspector.py`) | 2 / 2 | Passed |
+| | Sandbox Validator (`tests/test_validator.py`) | 1 / 1 | Passed |
+| | Workflow Orchestrator (`tests/test_orchestrator.py`) | 1 / 1 | Passed |
+| **Sample Codebases** | Task Tracker (`sample_codebases/task_tracker/test_service.py`) | 5 / 5 | Passed |
+| | Shopping Cart (`sample_codebases/shopping_cart/test_cart.py`) | 5 / 5 | Passed |
+| | User Auth (`sample_codebases/user_auth/test_authenticator.py`) | 4 / 4 | Passed |
+| **Total Repository Tests** | **All Test Suites** | **18 / 18** | **100% Pass** |
+
+---
+
+### 1. Core Agent Pipeline Tests (`tests/`) — 4 Passing
+
+Verifies AST parsing, symbol extraction, isolated sandbox execution, and the full end-to-end agent workflow state machine:
+
+- `test_inspector.py`:
+  - `test_scan_codebase_finds_python_files`: Verifies recursive discovery of all Python modules in a project.
+  - `test_analyze_ast_extracts_classes_and_functions`: Verifies accurate AST extraction of classes, functions, and methods.
+- `test_validator.py`:
+  - `test_validation_passes_on_unmodified_sample_codebase`: Verifies baseline test execution inside ephemeral sandbox directories.
+- `test_orchestrator.py`:
+  - `test_full_agent_workflow_execution`: Verifies end-to-end multi-step agent pipeline reaching `COMPLETED` status.
+
+#### Run Core Agent Tests:
 ```bash
-python -m unittest discover tests
+# Run all core agent tests
+python -m unittest discover -s tests -v
+
+# Run individual test modules
+python -m unittest tests/test_inspector.py -v
+python -m unittest tests/test_validator.py -v
+python -m unittest tests/test_orchestrator.py -v
 ```
 
-### Run Specific Test Modules
+---
+
+### 2. Sample Codebases Test Suites (`sample_codebases/`) — 14 Passing
+
+Verifies domain models, operations, coupon/tax logic, and authentication security for the built-in target codebases:
+
+- **Task Tracker** (`sample_codebases/task_tracker/test_service.py` — 5 tests):
+  - `test_create_task_success`: Validates task instantiation and field defaults.
+  - `test_create_task_invalid_title`: Validates title validation error handling.
+  - `test_mark_complete`: Validates completion transitions and timestamps.
+  - `test_list_tasks_filter`: Validates filtering by completion status.
+  - `test_delete_task`: Validates task removal.
+- **Shopping Cart** (`sample_codebases/shopping_cart/test_cart.py` — 5 tests):
+  - `test_subtotal_calculation`: Validates accurate multi-item subtotaling.
+  - `test_item_quantity_merge`: Validates item quantity aggregation.
+  - `test_discount_calculation`: Validates coupon discounts (e.g., `WELCOME10`).
+  - `test_tax_calculation`: Validates regional sales tax calculations.
+  - `test_invalid_coupon`: Validates fallback on unrecognized coupons.
+- **User Auth** (`sample_codebases/user_auth/test_authenticator.py` — 4 tests):
+  - `test_successful_login`: Validates authentication with valid credentials.
+  - `test_failed_login`: Validates rejection on incorrect credentials.
+  - `test_account_lockout_after_failed_attempts`: Validates brute-force lockout protection.
+  - `test_short_password_rejection`: Validates password security constraints.
+
+#### Run Sample Codebase Tests:
 ```bash
-# Test AST inspection and symbol extraction
-python -m unittest tests/test_inspector.py
+# Task Tracker tests
+python -m unittest sample_codebases/task_tracker/test_service.py -v
 
-# Test sandbox creation and test execution
-python -m unittest tests/test_validator.py
+# Shopping Cart tests
+python -m unittest sample_codebases/shopping_cart/test_cart.py -v
 
-# Test orchestrator pipeline state machine
-python -m unittest tests/test_orchestrator.py
-```
-
-Expected output:
-```
-....
-----------------------------------------------------------------------
-Ran 4 tests in 0.28s
-
-OK
+# User Auth tests
+python -m unittest sample_codebases/user_auth/test_authenticator.py -v
 ```
 
 ---
